@@ -4,7 +4,7 @@
 
 class Display {
 
-    constructor(canvasID, boardWidth, boardHeight, background = 'white', border = 'black', scale = 10) {
+    constructor(canvasID, boardWidth, boardHeight, background = '#FFFFFF', foreground = '#000000', border = '#000000', scale = 10) {
         this.scale = scale || 10
         this.width = boardWidth * this.scale
         this.height = boardHeight * this.scale
@@ -17,8 +17,9 @@ class Display {
         this.buffer.width = this.width
         this.buffer.height = this.height
         this.bcontext = this.buffer.getContext('2d')
-        this.background = background || 'white'
-        this.border = border || 'red'
+        this.background = background || '#FFFFFF'
+        this.foreground = foreground || '#000000'
+        this.border = border || '#000000'
     }
 
     clearBuffer() {
@@ -28,9 +29,9 @@ class Display {
         // this.bcontext.clearRect(0, 0, this.width, this.height)
     }
 
-    drawCell(x, y, color) {
+    drawCell(x, y) {
         // console.log('Display.drawCell()', x, y, color)
-        this.bcontext.fillStyle = color
+        this.bcontext.fillStyle = this.foreground
         this.bcontext.fillRect((x * this.scale)+1, (y * this.scale)+1, 8, 8)
     }
 
@@ -39,9 +40,9 @@ class Display {
         this.context.drawImage(this.buffer, 0, 0)
     }
 
-    enableCell(x, y, color) {
-        console.log(`Display.enableCell(${x}, ${y}, ${color})`)
-        this.context.fillStyle = color
+    enableCell(x, y) {
+        console.log(`Display.enableCell(${x}, ${y})`)
+        this.context.fillStyle = this.foreground
         this.context.fillRect((x * this.scale) + 1, (y * this.scale)+1, 8, 8)
     }
 
@@ -49,13 +50,6 @@ class Display {
         console.log(`Display.disableCell(${x}, ${y})`)
         this.context.fillStyle = this.background
         this.context.fillRect(x * this.scale, y * this.scale, 10, 10)
-    }
-
-    drawText(text, color) {
-        color = color || 'red'
-        this.context.fillStyle = color
-        this.context.font = "10px Courier"
-        this.context.fillText(text, 5, 11)
     }
 
 }
@@ -253,17 +247,16 @@ class Simulation {
 
 class Cell {
 
-    constructor(x, y, color) {
+    constructor(x, y) {
         this.x = x
         this.y = y
-        this.color = (color === undefined) ? 'black' : color
     }
 
     static fromString(str) {
-        let [x, y, color] = str.split('.')
+        let [x, y] = str.split('.')
         x = parseInt(x, 10)
         y = parseInt(y, 10)
-        return new Cell(x, y, color)
+        return new Cell(x, y)
     }
 
     equals(otherCell) {
@@ -283,57 +276,57 @@ class Cell {
             y2 = y2 < 0 ? board.height : y2
             x1 = x1 > board.width ? 0 : x1
             x2 = x2 < 0 ? board.width : x2
-            neighbors.push(new Cell(x1, y1, this.color))
-            neighbors.push(new Cell(x1, y2, this.color))
-            neighbors.push(new Cell(x2, y1, this.color))
-            neighbors.push(new Cell(x2, y2, this.color))
-            neighbors.push(new Cell(x1, this.y, this.color))
-            neighbors.push(new Cell(x2, this.y, this.color))
-            neighbors.push(new Cell(this.x, y1, this.color))
-            neighbors.push(new Cell(this.x, y2, this.color))
+            neighbors.push(new Cell(x1, y1))
+            neighbors.push(new Cell(x1, y2))
+            neighbors.push(new Cell(x2, y1))
+            neighbors.push(new Cell(x2, y2))
+            neighbors.push(new Cell(x1, this.y))
+            neighbors.push(new Cell(x2, this.y))
+            neighbors.push(new Cell(this.x, y1))
+            neighbors.push(new Cell(this.x, y2))
         } else {       // dead
             // SW
             if (this.y + 1 < board.height && this.x - 1 >= 0) {
-                neighbors.push(new Cell(this.x - 1, this.y + 1, this.color))
+                neighbors.push(new Cell(this.x - 1, this.y + 1))
             }
             // SE
             if (this.y + 1 < board.height && this.x + 1 < board.width) {
-                neighbors.push(new Cell(this.x + 1, this.y + 1, this.color))
+                neighbors.push(new Cell(this.x + 1, this.y + 1))
             }
             // NW
             if (this.y - 1 >= 0 && this.x - 1 >= 0) {
-                neighbors.push(new Cell(this.x - 1, this.y - 1, this.color))
+                neighbors.push(new Cell(this.x - 1, this.y - 1))
             }
             // NE
             if (this.y - 1 >= 0 && this.x + 1 < board.width) {
-                neighbors.push(new Cell(this.x + 1, this.y - 1, this.color))
+                neighbors.push(new Cell(this.x + 1, this.y - 1))
             }
             // N
             if (this.y + 1 < board.height) {
-                neighbors.push(new Cell(this.x, this.y + 1, this.color))
+                neighbors.push(new Cell(this.x, this.y + 1))
             }
             // S
             if (this.y - 1 >= 0) {
-                neighbors.push(new Cell(this.x, this.y - 1, this.color))
+                neighbors.push(new Cell(this.x, this.y - 1))
             }
             // E
             if (this.x + 1 < board.width) {
-                neighbors.push(new Cell(this.x + 1, this.y, this.color))
+                neighbors.push(new Cell(this.x + 1, this.y))
             }
             // W
             if (this.x - 1 >= 0) {
-                neighbors.push(new Cell(this.x - 1, this.y, this.color))
+                neighbors.push(new Cell(this.x - 1, this.y))
             }
         }
         return neighbors
     }
 
     toString() {
-        return `${this.x}.${this.y}.${this.color}`
+        return `${this.x}.${this.y}}`
     }
 
     value() {
-        return [this.x, this.y, this.color]
+        return [this.x, this.y]
     }
 
 }
@@ -344,7 +337,7 @@ class Cell {
 ///////////////////////////
 
 const board = new Board(50, 50, [])
-const display = new Display('board', board.width, board.height)
+const display = new Display('board', board.width, board.height, "#625fec","#ff58e3")
 const simulation = new Simulation(board, display)
 
 // Game Loop
@@ -648,3 +641,33 @@ sparseButton.addEventListener('click', event => {
     }
 })
 randomizeFieldset.appendChild(sparseButton)
+
+// COLORS
+const colorFieldset = document.getElementById('colors')
+
+const backgroundColorLabel = document.createElement('label')
+const backgroundColorInput = document.createElement('input')
+backgroundColorInput.setAttribute('type', 'color')
+backgroundColorInput.setAttribute('id', 'backgroundColor')
+backgroundColorInput.setAttribute('value', display.background)
+backgroundColorInput.addEventListener('change', event => {
+    display.background = event.target.value
+})
+backgroundColorLabel.appendChild(backgroundColorInput)
+backgroundColorLabel.prepend('Background: ')
+colorFieldset.appendChild(backgroundColorLabel)
+colorFieldset.appendChild(document.createElement('br'))
+
+const foregroundColorLabel = document.createElement('label')
+const foregroundColorInput = document.createElement('input')
+foregroundColorInput.setAttribute('type', 'color')
+foregroundColorInput.setAttribute('id', 'foregroundColor')
+foregroundColorInput.setAttribute('value', display.foreground)
+foregroundColorInput.addEventListener('change', event => {
+    display.foreground = event.target.value
+})
+foregroundColorLabel.appendChild(foregroundColorInput)
+foregroundColorLabel.prepend('Foreground: ')
+colorFieldset.appendChild(foregroundColorLabel)
+
+simulation.reset()
