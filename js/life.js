@@ -669,5 +669,24 @@ foregroundColorInput.addEventListener('change', event => {
 foregroundColorLabel.appendChild(foregroundColorInput)
 foregroundColorLabel.prepend('Foreground: ')
 colorFieldset.appendChild(foregroundColorLabel)
+colorFieldset.appendChild(document.createElement('br'))
+
+const randomColorsButton = document.createElement('button')
+randomColorsButton.innerText = "Randomize Colors"
+randomColorsButton.addEventListener('click', event => {
+    event.preventDefault()
+    let newBackground = randomColor()
+    let newForeground = randomColor()
+    backgroundColorInput.value = newBackground
+    display.background = newBackground
+    foregroundColorInput.value = newForeground
+    display.foreground = newForeground
+})
+
+function randomColor() {
+    return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')
+}
+
+colorFieldset.appendChild(randomColorsButton)
 
 simulation.reset()
