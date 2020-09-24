@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Conway's Game of Life</title>
+    </head>
+    <body>
+        <header>
+            <h1>Conway's Game of Life</h1>
+        </header>
+        <section id="display" class="container">
+            <div id="gens">Generations: 0</div>
+            <canvas id="board"></canvas>
+        </section>
+        <section id="options" class="container">
+            <fieldset id="controls">
+                <legend>Controls</legend>
+                <button id="run">Run</button>
+                <button id="step">Step</button>
+                <button id="reset">Reset</button>
+            </fieldset>
+            <fieldset id="edgeBehavior">
+                <legend>Edge Behavior</legend>
+            </fieldset>
+            <fieldset id="speed">
+                <legend>Simulation Speed</legend>
+            </fieldset>
+            <fieldset id="rules">
+                <legend>Rules</legend>
+            </fieldset>
+            <fieldset id="random">
+                <legend>Randomize</legend>
+            </fieldset>
+        </section>
+        <footer style="display:flex; justify-content:space-between">
+            <div>&copy;2020 Eric Seibt</div>
+            <div><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">About the Game of Life (wikipedia)</a></div>
+            
+            <script src="js/life.js"></script>
+        </footer>
+    </body>
+</html>
