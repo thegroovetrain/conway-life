@@ -272,10 +272,10 @@ class Cell {
             let y2 = this.y - 1
             let x1 = this.x + 1
             let x2 = this.x - 1
-            y1 = y1 > board.height ? 0 : y1
-            y2 = y2 < 0 ? board.height : y2
-            x1 = x1 > board.width ? 0 : x1
-            x2 = x2 < 0 ? board.width : x2
+            y1 = y1 >= board.height ? 0 : y1
+            y2 = y2 < 0 ? board.height-1 : y2
+            x1 = x1 >= board.width ? 0 : x1
+            x2 = x2 < 0 ? board.width-1 : x2
             neighbors.push(new Cell(x1, y1))
             neighbors.push(new Cell(x1, y2))
             neighbors.push(new Cell(x2, y1))
