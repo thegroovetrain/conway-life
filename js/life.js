@@ -337,7 +337,7 @@ class Cell {
 ///////////////////////////
 
 const board = new Board(50, 50, [])
-const display = new Display('board', board.width, board.height, "#625fec","#ff58e3")
+const display = new Display('board', board.width, board.height, randomColor(), randomColor())
 const simulation = new Simulation(board, display)
 
 // Game Loop
